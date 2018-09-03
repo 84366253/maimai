@@ -130,9 +130,6 @@ export default {
         this.catelist = response.data.message.catelist;
         this.sliderlist = response.data.message.sliderlist;
         this.toplist = response.data.message.toplist;
-        // console.log(this.catelist);
-        // console.log(this.sliderlist);
-        // console.log(this.sliderlist);
       });
 
     this.$axios

@@ -11,23 +11,28 @@
                     <a target="_blank" href="#"></a>
                 </div>
                 <div id="menu" class="right-box">
-                    <span style="display: none;">
-                        <a href="" class="">登录</a>
+                    <span v-show="$store.state.islogin ==false">
+                        <!-- <a href="" class="">登录</a> -->
+                        <router-link to="/login">登录</router-link>
                         <strong>|</strong>
                         <a href="" class="">注册</a>
                         <strong>|</strong>
                     </span>
-                    <span>
-                        <a href="" class="">会员中心</a>
+                    <span v-show="$store.state.islogin ==true">
+                        <router-link :to="`/vipcenter/`+ 3761">会员中心</router-link>
+                        
                         <strong>|</strong>
-                        <a>退出</a>
+                        <a @click="del">退出</a>
                         <strong>|</strong>
                     </span>
-                    <a href="" class="">
+                    <router-link to="/shopping">
+                    <!-- <a href="" class=""> -->
                         <i class="iconfont icon-cart"></i>购物车(
                         <span id="shoppingCartCount">
-                            <span>4</span>
-                        </span>)</a>
+                            <span>{{$store.getters.goodsComments}}</span>
+                        </span>)
+                        <!-- </a> -->
+                        </router-link>
                 </div>
             </div>
         </div>
@@ -114,13 +119,46 @@
                     </div>
                 </div>
             </div>
+            <Modal v-model="isShow" width="360">
+        <p slot="header" style="color:#f60;text-align:center">
+            <Icon type="ios-information-circle"></Icon>
+            <span>确认登出</span>
+        </p>
+        <div style="text-align:center">
+            <p>确认要登出么</p>
+
+        </div>
+        <div slot="footer">
+            <Button type="error" size="large"   @click="logout">确认</Button>
+             <Button type="error" size="large"   @click="isShow = false">取消</Button>
+        </div>
+    </Modal>
 </div>
 </template>
 
 <script>
 import $ from "jquery";
 export default {
-  name: "app"
+  name: "app",
+  data: function() {
+    return {
+      isShow: false
+    };
+  },
+  methods: {
+    del() {
+      this.isShow = true;
+    },
+    logout() {
+      //登出
+      this.$axios.get(`site/account/logout`).then(response => {
+        this.isShow = false;
+        if (response.data.status == 0) {
+          this.$store.commit("changeLoginStatus", false);
+        }
+      });
+    }
+  }
 };
 
 //插件逻辑代码
@@ -161,7 +199,11 @@ $(document).ready(function() {
   background-image: none;
 }
 
-body{
+body {
   background-color: transparent;
+}
+div.ivu-modal-footer {
+  display: flex;
+  justify-content: center;
 }
 </style>

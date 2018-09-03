@@ -47,7 +47,7 @@
                                         <dt>购买数量</dt>
                                         <dd>
                                             <div class="stock-box">
-                                           <el-input-number v-model="num1" @change="handleChange" :min="1" :max="goodsinfo.stock_quantity" label="描述文字" size="mini"></el-input-number>
+                                           <el-input-number v-model="num1" @change="handleChange" :min="0" :max="goodsinfo.stock_quantity" label="描述文字" size="mini"></el-input-number>
                                             </div>
                                             <span class="stock-txt">
                                                 库存
@@ -175,7 +175,7 @@ export default {
       page: 1,
       size: 5,
       total: 1,
-      num1: 1,
+      num1: 0,//购买商品数量
       commentinfo: undefined,
       goodscomments: [], //评论信息
       zoomerOptions: {
@@ -262,16 +262,25 @@ export default {
     },
     //购物商品小图片
     cartAdd(){
+        if(this.num1 == 0){
+            this.$message.error('哥们买点东西!');
+            return;
+        }
         //加入购物车
         let addOffset = $('.add').offset();
         //购物车
         let iconCart = $('.icon-cart').offset();
-        // console.log(iconCart);
         //动画效果
         $('.moveImg').css(addOffset).stop().show().animate(iconCart,1000,function(){
             $(this).stop().hide();
         })
         
+        //测试vuex
+        // this.$store.commit('increment',10)
+        this.$store.commit('addcomment',{
+            goodId:this.detailID,
+            goodNum:this.num1
+        })
     }
   },
   created() {
